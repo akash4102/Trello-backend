@@ -1,6 +1,7 @@
 const { Task } = require('../models/task.model');
 const { Project } = require('../models/project.model');
 const { zodTaskSchema } = require('../utils/zodValidations');
+const { z } = require('zod');
 
 // Create a new task
 const createNewTask = async (req, res) => {
