@@ -97,6 +97,7 @@ This repository contains the backend code for a Trello application. It provides 
 ## Deployment
 
 The backend is deployed on AWS [http://44.203.0.181:5000/api/v1].
+The backend is deployed on Vercel [https://trello-backend-lyart.vercel.app/api/v1].
 
 ## Project Structure
 
