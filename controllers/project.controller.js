@@ -1,14 +1,14 @@
+// controllers/projectController.js
 const { z } = require('zod');
 const { Project } = require('../models/project.model');
 const { Task } = require('../models/task.model');
 const { zodProjectSchema } = require('../utils/zodValidations');
 
-
 // Create a new project
-const createNewProject =  async (req, res) => {
+const createNewProject = async (req, res) => {
   try {
     const { name, description } = zodProjectSchema.parse(req.body);
-    const project = new Project({ name, description });
+    const project = new Project({ name, description, owner: req.user.id });
     await project.save();
     res.status(201).json(project);
   } catch (error) {
@@ -19,40 +19,37 @@ const createNewProject =  async (req, res) => {
   }
 };
 
-// Get all projects
-const getAllProjects =  async (req, res) => {
+// Get all projects for the authenticated user
+const getAllProjects = async (req, res) => {
   try {
-    const projects = await Project.find();
+    const projects = await Project.find({ owner: req.user.id });
     res.status(200).json(projects);
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
 };
 
-// Get project details including tasks
+// Get project details including tasks for the authenticated user
 const getProjectDetails = async (req, res) => {
   try {
-    const project = await Project.findById(req.params.projectId);
-
+    const project = await Project.findOne({ _id: req.params.projectId, owner: req.user.id });
     if (!project) {
       return res.status(404).json({ message: 'Project not found' });
     }
-
     const tasks = await Task.find({ project: project._id });
-
     res.status(200).json({ project, tasks });
   } catch (error) {
     console.error('Error fetching project details:', error);
     res.status(500).json({ message: 'Server error' });
   }
 };
+
 // Update a project
 const updateProject = async (req, res) => {
   try {
     const { name, description } = zodProjectSchema.parse(req.body);
-
-    const project = await Project.findByIdAndUpdate(
-      req.params.projectId,
+    const project = await Project.findOneAndUpdate(
+      { _id: req.params.projectId, owner: req.user.id },
       { name, description },
       { new: true, runValidators: true }
     );
@@ -74,9 +71,9 @@ const updateProject = async (req, res) => {
 };
 
 // Delete a project
-const deleteProject =  async (req, res) => {
+const deleteProject = async (req, res) => {
   try {
-    const project = await Project.findByIdAndDelete(req.params.projectId);
+    const project = await Project.findOneAndDelete({ _id: req.params.projectId, owner: req.user.id });
     if (!project) {
       return res.status(404).json({ message: 'Project not found' });
     }
@@ -87,5 +84,4 @@ const deleteProject =  async (req, res) => {
   }
 };
 
-module.exports = {createNewProject, getAllProjects, getProjectDetails,deleteProject, updateProject};
-
+module.exports = { createNewProject, getAllProjects, getProjectDetails, deleteProject, updateProject };

@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const { User } = require('../models/user.model');
 const { zodRegisterSchema, zodLoginSchema } = require('../utils/zodValidations');
 const { CONFIG } = require('../utils/config');
+const { z } = require('zod');
 
 const jwtSecret = CONFIG.JWT_SECRET;
 
