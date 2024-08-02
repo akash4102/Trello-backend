@@ -29,7 +29,13 @@ const register = async (req, res) => {
 
         await user.save();
 
-        res.status(201).json({ message: 'User registered successfully',user });
+        const userResponse = {
+            id: user._id,
+            name: user.name,
+            email: user.email,
+        };
+
+        res.status(201).json({ message: 'User registered successfully',user: userResponse });
     } catch (error) {
         if (error instanceof z.ZodError) {
             return res.status(400).json({ errors: error.errors });
@@ -55,9 +61,14 @@ const login = async (req, res) => {
         }
 
         // Generate JWT
-        const token = jwt.sign({ id: user._id }, jwtSecret, { expiresIn: '1h' });
+        const token = jwt.sign({ id: user._id }, jwtSecret, { expiresIn: '24h' });
+        const userResponse = {
+            id: user._id,
+            name: user.name,
+            email: user.email,
+        };
 
-        res.status(200).json({ token });
+        res.status(200).json({ token,user:userResponse });
     } catch (error) {
         if (error instanceof z.ZodError) {
             return res.status(400).json({ errors: error.errors });

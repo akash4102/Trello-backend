@@ -67,7 +67,6 @@ const deleteTask = async (req, res) => {
       _id: req.params.taskId,
       owner: req.user.id,
     });
-
     if (!task) {
       return res.status(404).json({ message: 'Task not found or access denied' });
     }

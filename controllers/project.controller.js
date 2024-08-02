@@ -1,4 +1,3 @@
-// controllers/projectController.js
 const { z } = require('zod');
 const { Project } = require('../models/project.model');
 const { Task } = require('../models/task.model');
@@ -20,7 +19,7 @@ const createNewProject = async (req, res) => {
 };
 
 // Get all projects for the authenticated user
-const getAllProjects = async (req, res) => {
+const getAllProjectsWithoutTask = async (req, res) => {
   try {
     const projects = await Project.find({ owner: req.user.id });
     res.status(200).json(projects);
@@ -29,6 +28,29 @@ const getAllProjects = async (req, res) => {
   }
 };
 
+//get all projects with all the task under that project
+const getAllProjects = async (req, res) => {
+  try {
+    const projects = await Project.find({ owner: req.user.id });
+
+    const projectsWithTasks = [];
+
+    for (const project of projects) {
+      const tasks = await Task.find({ project: project._id });
+
+      projectsWithTasks.push({
+        ...project.toObject(),
+        tasks: tasks,
+      });
+    }
+
+    // Send the response with projects and their tasks
+    res.status(200).json(projectsWithTasks);
+  } catch (error) {
+    console.error('Error fetching all projects:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
 // Get project details including tasks for the authenticated user
 const getProjectDetails = async (req, res) => {
   try {
@@ -84,4 +106,4 @@ const deleteProject = async (req, res) => {
   }
 };
 
-module.exports = { createNewProject, getAllProjects, getProjectDetails, deleteProject, updateProject };
+module.exports = { createNewProject, getAllProjects, getProjectDetails, deleteProject, updateProject,getAllProjectsWithoutTask };
