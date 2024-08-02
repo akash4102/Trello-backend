@@ -27,9 +27,11 @@ This repository contains the backend code for a Trello application. It provides 
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/en/download/)
-- [MongoDB](https://www.mongodb.com/try/download/community) (local or [Atlas](https://www.mongodb.com/cloud/atlas) for cloud)
-- [Git](https://git-scm.com/)
+- Node.js
+- MongoDB
+- Express
+- Git
+- AWS
 
 ### Setup
 
@@ -46,7 +48,7 @@ This repository contains the backend code for a Trello application. It provides 
 
 3. **Configure Environment Variables**:
 
-   Create a `.env` file in the root directory and add varialbes available in .env.example file:
+   Create a `.env` file in the root directory and add varialbes available in `.env.example` file:
 
    necessary variables
    ```
@@ -71,12 +73,13 @@ This repository contains the backend code for a Trello application. It provides 
   - **Request Body**: `{ "name": "John Doe", "email": "john@example.com", "password": "SecurePassword123!" }`
 - **POST** `/api/v1/auth/login`: Log in a user and receive a JWT.
   - **Request Body**: `{ "email": "john@example.com", "password": "SecurePassword123!" }`
+- **GET** `/api/v1/auth/verify`: Verify the user by client and get client data.
 
 ### Projects
 
 - **POST** `/api/v1/project`: Create a new project.
   - **Request Body**: `{ "name": "Project Alpha", "description": "This is a description of Project Alpha." }`
-- **GET** `/api/v1//project`: Retrieve all projects.
+- **GET** `/api/v1/project`: Retrieve all projects.
 - **GET** `/api/v1/project/:projectId`: Retrieve a project by ID along with its tasks.
 - **PUT** `/api/v1/project/:projectId`: Update a project by ID.
   - **Request Body**: `{ "name": "Updated Project Alpha", "description": "Updated description." }`
@@ -93,7 +96,7 @@ This repository contains the backend code for a Trello application. It provides 
 
 ## Deployment
 
-The backend is deployed at [http://44.203.0.181:5000/api/v1](deployed url).
+The backend is deployed on AWS [http://44.203.0.181:5000/api/v1].
 
 ## Project Structure
 
